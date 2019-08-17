@@ -52,8 +52,8 @@ class Calendar extends Component {
         var updatedData = "";
         $.ajax({
             type: 'POST',
-            url: "http://localhost/phpCall/call.php",
-            //url: "https://request.kallu.fi/call.php",
+            //url: "http://localhost/phpCall/call.php",
+            url: "https://request.kallu.fi/call.php",
             data: givenData,
             success: function (givenData) {
                 var returnedData = givenData;

@@ -96,8 +96,8 @@ class courseTable extends Component {
         console.time("Fetch");
         $.ajax({
             type: 'POST',
-            //url: "https://request.kallu.fi/call.php",
-            url: "http://localhost/phpCall/call.php",
+            url: "https://request.kallu.fi/call.php",
+            //url: "http://localhost/phpCall/call.php",
             data: givenData,
             success: function (givenData) {
                 var returnedData = givenData;
