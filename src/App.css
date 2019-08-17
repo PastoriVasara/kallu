@@ -7,7 +7,17 @@
   height: 40vmin;
   pointer-events: none;
 }
-
+body
+{
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: black; 
+}
+h2 
+{
+  text-transform: uppercase;
+}
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -31,3 +41,13 @@
     transform: rotate(360deg);
   }
 }
+
+:local(.hidden)
+    {
+      display:hidden !important;
+    }
+  
+:local(.active)
+    {
+      display:block !important; 
+    }

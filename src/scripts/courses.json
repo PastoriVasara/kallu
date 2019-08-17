@@ -1,0 +1,8 @@
+{
+    "units": ["Viestintätieteet","Kasvatustieteet","Johtamiskorkeakoulu","Kielikeskus","Luonnontieteet","Lääketieteet & Biotieteet","Yhteiskuntatieteet","Tutkijakoulu"],
+    "unitAbb" : ["COMSTK","EDUTK","JKKTK","LANCE","LUOTK","MEDTK","SOCTK","TUTKI"],
+    "degree" : ["BIO","BTK","BTM","CBDAM","CBDAT","COSOP","DPCMT","DPEDU","DPHI","DPHS","DPII","DPIPE","DPIS","DPIT","DPJKK","DPLA","DPLS","DPMLS","DPYT","ENG","FIL","FIM","GEN","GTS","HAL","HEA","HIS","HTI","IGS","ITI","JMM","JOV","KAM","KAS","KAT","KIR","LFC","LOG","MAT","MEDU","MEJO","MTT","MVK","NORD","NUTTU","PCP","PEACE","PGH","POH","POL","POM","PSY","RAN","SAK","STM","STY","SUO","TEA","TEE","TER","THV","TIE","VEN","YKM","YKT","YKTP"],
+    "periods" : ["PERIOD1","PERIOD2","PERIOD3","PERIOD4"],
+    "array" : ["ID","CODE","UNIT","DEGREE","NAME","STARTTIME","ENDTIME","LANGUAGE","URL","CREDITS","PERIOD1","PERIOD2","PERIOD3","PERIOD4"]
+}
+  
