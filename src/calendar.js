@@ -1,25 +1,11 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import ListOfMenuItems from './scripts/courses.json';
 import { Checkbox } from '@material-ui/core';
-import DownArrow from '@material-ui/icons/ArrowDropUp';
-import UpArrow from '@material-ui/icons/ArrowDropDown';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import TableFooter from '@material-ui/core/TableFooter';
-import TablePagination from '@material-ui/core/TablePagination';
-import Button from '@material-ui/core/Button';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import './main.scss';
 import colorHelpers from './scripts/courseColors.json';
-import styles from './App.css';
 
 
 class Calendar extends Component {
@@ -39,6 +25,7 @@ class Calendar extends Component {
             courses: this.props.data
         });
     }
+    //make SQL call for each lecture of the selected courses
     ajaxTheCourses = () => {
         Date.prototype.addHours = function (h) {
             this.setHours(this.getHours() + h);
@@ -62,13 +49,18 @@ class Calendar extends Component {
             contentsType: 'json',
             async: false,
             error: function (x, e) {
+                //debugging SQL errors
                 console.log(givenData);
                 console.log(Object.keys(x));
                 console.log("CODE " + x.status + " Error: " + e);
             }
 
         });
-        console.log(updatedData);
+
+        //a bit more complicated object.
+        //Main level is array of different courses
+        //below each course is its name and different types of groups in it
+        // each group has its name and all the sessions of the group
         if(updatedData.length > 0){
         var currentID = updatedData[0].ID;
         var currentGROUP = updatedData[0].LECTURETYPE;
@@ -170,7 +162,6 @@ class Calendar extends Component {
             shorthand[shorthand.length - 1].groupSessions.push(datesOfSingleType);
         }
         
-        console.log(courseParent);
         this.setState({
             lectures: courseParent
         });
@@ -223,6 +214,7 @@ class Calendar extends Component {
 
     }
 
+    //modify the course color based on which group it belongs
     checkCorrectColor = (baselineColor, modifier, iteration) => {
         var addedAmount = Math.ceil(255 * modifier);
         var redAmount = this.colorAddingFilter(baselineColor.Red, addedAmount, iteration);
@@ -231,6 +223,7 @@ class Calendar extends Component {
 
         return "rgb(" + redAmount + "," + greenAmount + "," + blueAmount + ")";
     }
+    //add more brightness to color if there are multiple different options for the group
     colorAddingFilter = (amount, addedAmount, iteration) => {
         var currentAmount = iteration === 1 ? 0 : iteration;
         return (amount + addedAmount < 0 || amount + addedAmount > 255) ? (amount + currentAmount < 255 ? amount + ((currentAmount % 5) * 20) : amount) : amount + addedAmount;
@@ -244,6 +237,7 @@ class Calendar extends Component {
             this.ajaxTheCourses();
         }
     }
+    //update on which groups are selected
     updateGroups = (currentIteration, groupIteration, sessionIteration) => {
         var allLectures = [...this.state.lectures];
 
@@ -253,16 +247,15 @@ class Calendar extends Component {
         });
 
     }
+    //collapse all the children of the clicked div
     collapseCourses(currentIteration) {
-        console.log("ping");
-        var allLectures = [...this.state.lectures];
-        console.log(allLectures[currentIteration].active);
+        var allLectures = [...this.state.lectures];      
         allLectures[currentIteration].active = !allLectures[currentIteration].active;
-        console.log(allLectures[currentIteration].active);
         this.setState({
             lectures: allLectures
         });
     }
+    //collapse only the members of clicked group
     collapseGroups(currentIteration, currentGroupIteration) {
         var allLectures = [...this.state.lectures];
         allLectures[currentIteration].courseGroups[currentGroupIteration].active = !allLectures[currentIteration].courseGroups[currentGroupIteration].active;
@@ -271,11 +264,8 @@ class Calendar extends Component {
         });
     }
     render() {
-
-
         var selectedLectureTypes = [];
         var renderedLectureTypes = [];
-        console.log(this.state.lectures);
         selectedLectureTypes.push
             (
                 <div>
@@ -346,7 +336,6 @@ class Calendar extends Component {
             }
 
         }
-        console.log(renderedLectureTypes);
         var calendar = [];
         if(this.state.lectures.length > 0)
         {

@@ -14,16 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 import Button from '@material-ui/core/Button';
-
-
-const styles = theme => ({
-    icon: {
-        position: "relative",   
-        top: theme.spacing.unit,
-        width: theme.typography.display1.fontSize,
-        height: theme.typography.display1.fontSize
-    }
-});
+import Paper from '@material-ui/core/Paper';
 
 class courseTable extends Component {
     constructor() {
@@ -39,15 +30,18 @@ class courseTable extends Component {
             };
 
     }
+    //on mounting update the courses
     componentDidMount() {
         this.updateCourses();
     }
+    //check if properties have changed
     checkProperties(previousProperties, properties) {
         return (previousProperties.degrees != properties.degrees
             || previousProperties.periods != properties.periods
             || previousProperties.units != properties.units
             || previousProperties.started != properties.started)
     }
+    //on changing the properties update courses
     componentDidUpdate(prevProps, prevState) {
         if (this.props.started && this.checkProperties(prevProps, this.props)) {
 
@@ -55,8 +49,10 @@ class courseTable extends Component {
 
         }
     }
+
+    //turn an array of selections to a single object
     coursesIntoObject() {
-        console.time("TurnIntoObjects");
+
 
         var periods = [];
         var degrees = [];
@@ -85,7 +81,6 @@ class courseTable extends Component {
             tableDegrees: degrees,
             tableUnits: units
         }
-        console.timeEnd("TurnIntoObjects");
         return contentList
     }
 
@@ -93,7 +88,7 @@ class courseTable extends Component {
         var givenData = this.coursesIntoObject();
         var updatedData = "";;
 
-        console.time("Fetch");
+        //fetch the selected courses from SQL server via jquery
         $.ajax({
             type: 'POST',
             url: "https://request.kallu.fi/call.php",
@@ -106,28 +101,27 @@ class courseTable extends Component {
             contentsType: 'json',
             async: false,
             error: function (x, e) {
+                //debugging possible errors
                 console.log(givenData);
                 console.log(Object.keys(x));
                 console.log("CODE " + x.status + " Error: " + e);
             }
 
         });
-        console.timeEnd("Fetch");
-        console.log(updatedData);
+
         this.setState({
             courses: updatedData,
             selectedCourses: new Array(updatedData.length).fill('')
         });
         this.forceUpdate();
     }
+    //sort columns by clicking the selected column
     sortColumns = (columnName) => {
         var orderedCourses = [...this.state.courses];
         var order = 1;
         var count = this.state.sortState;
-        console.log(count);
         if (columnName === this.state.latestSort) {
             if (count === 1) {
-                console.log(count);
                 order = -1;
                 count = 2;
             }
@@ -138,7 +132,6 @@ class courseTable extends Component {
         else {
             count = 1;
         }
-        console.log(count);
         orderedCourses.sort((a, b) => (a[columnName] > b[columnName]) ? 1 * order : -1 * order);
         this.setState({
             courses: orderedCourses,
@@ -147,13 +140,16 @@ class courseTable extends Component {
             page: 0
         });
     }
+    //change the page
     handleChangePage = (event, page) => {
         this.setState({ page });
     };
-
+    //change the amount of rows for each page
     handleChangeRowsPerPage = event => {
         this.setState({ rowsPerPage: event.target.value });
     };
+
+    //update the selected course to be selected or not via clicking the checkbox
     updateSelectedCourses = (courseID, rowID) => {
         var updateSelection = [...this.state.selectedCourses];
         updateSelection[rowID] === '' ? updateSelection[rowID] = courseID : updateSelection[rowID] = '';
@@ -162,6 +158,7 @@ class courseTable extends Component {
         });
         this.forceUpdate();
     }
+    //filter away all empty selections
     filterSelected = () => {
         
         var wantedCourses = [...this.state.selectedCourses ];
@@ -174,13 +171,14 @@ class courseTable extends Component {
         }
     }
     render() {
-        console.time("turnIntoTable");
         const tableContents = [];
         if (this.state.courses.length > 0) {
             tableContents.push(
                 <div>
+                    
                     <Table >
                         <div style={{ marginTop: '7vh', overflow: 'auto', height: '75vh' }}>
+                        <Paper>
                             <TableHead>
                                 <TableRow>
                                     <TableCell> <Typography>Check</Typography> </TableCell>
@@ -229,6 +227,7 @@ class courseTable extends Component {
                                     ))}
 
                             </TableBody>
+                            </Paper>
                         </div>
                         <TableFooter>
                             <TableRow>
@@ -243,21 +242,20 @@ class courseTable extends Component {
                             </TableRow>
                         </TableFooter>
                     </Table>
+                    
                     <Button
                         variant="contained"
                         color="primary"
-                        style={{ margin: '50px 20px 0px 20px' }}
+                        style={{ margin: '0px 20px 0px 20px' }}
                         onClick={(e, v) => { this.filterSelected() }}>
                         LÄHETÄ
                 </Button>
                 </div>
             );
         }
-        console.timeEnd("turnIntoTable");
         return (
             <div>
                 {tableContents}
-
             </div>
         );
 
